@@ -6,7 +6,7 @@
         <title>Laravel</title>
         <!-- Fonts -->
         <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-		
+
         <!-- Styles -->
         <style>
 				body {
@@ -60,66 +60,77 @@
                 <div class="form-wrapper">
                     <h3>Insert</h3>
                     <form action="{{ route('insert') }}" method="post">
-					{{ csrf_field() }}
-                        <input type="text" name="fname" id="fname" placeholder=" First Name"></br>
-						@error('fname')
-						<div class="alert alert-danger">{{ $message }}</div>
-						@enderror
-                        <input type="text" name="lname" id="lname" placeholder=" Last Name"></br>
-						@error('lname')
-						<div class="alert alert-danger">{{ $message }}</div>
-						@enderror
-                        <button type="submit" value="Insert">Insert</button>
+                            @csrf
+
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" name="name">
+                            @error('name')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                            <br>
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email">
+                            @error('email')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                            <br>
+                            <input type="submit" value="Submit">
                     </form>
                 </div>
                 <div class="form-wrapper">
                     <h3>Update</h3>
-                    <form action="{{ route('update') }}" method="post">
-					 {{ csrf_field() }}
-					<input type="text" name="id" id="id" placeholder="Id"></br>
-					@error('id')
-						<div class="alert alert-danger">{{ $message }}</div>
-					@enderror
-                    <select name="choose-name" id="" style="width:88%">
-                            <option value="">Choose Name</option>
-                            <option value="fname">First Name</option>
-                            <option value="lname">Last Name</option>
-                    </select>
-					@error('choose-name')
-						<div class="alert alert-danger">{{ $message }}</div>
-					@enderror
-                    <input type="text" name="update-value" id="update-value" placeholder=" New Value">
-					@error('update-value')
-						<div class="alert alert-danger">{{ $message }}</div>
-					@enderror
-					</br>
-                        <button type="submit" value="Update">Update</button>
+					 <form method="POST" action="{{ route('update') }}">
+                        @csrf
+                        @method('PATCH')
+                        <label for="id">ID:</label>
+                        <input type="number" id="id" name="update_id">
+                        @error('update_id')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                        <br>
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="update_name">
+                        @error('update_name')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                        <br>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="update_email">
+                        @error('update_email')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                        <br>
+                        <input type="submit" value="Update">
                     </form>
                 </div>
                 <div class="form-wrapper">
                     <h3>Delete</h3>
-                    <form action="{{ route('delete') }}" method="post">
-						{{csrf_field()}}
-                        <input type="text" name="delete-id" id="id" placeholder=" Id"></br>
-						@error('delete-id')
-						<div class="alert alert-danger">{{ $message }}</div>
-						@enderror
-                        <button type="submit" value="Delete">Delete</button>
+                    <form method="POST" action="{{ route('delete') }}">
+                        @csrf
+                        @method('DELETE')
+                        <label for="id">ID:</label>
+                        <input type="number" id="id" name="delete-id">
+                        @error('delete-id')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                        <br>
+                        <input type="submit" value="Delete">
                     </form>
+
                 </div>
             </div>
             <div id="right-panel">
             <table>
                 <tr>
                 <th>Id</th>
-                <th>First Name</th>
-                <th>Last Name</th>
+                <th>Name</th>
+                <th>Email</th>
                 </tr>
                 @foreach ($results as $result)
                 <tr>
 					<td>{{ $result->id }}</td>
-					<td>{{ $result->fname }}</td>
-					<td>{{ $result->lname }}</td>
+					<td>{{ $result->name }}</td>
+					<td>{{ $result->email }}</td>
                 </tr>
                 @endforeach
             </table>

@@ -2,105 +2,73 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use Validator,Session;
+use Validator;
 class UserController extends Controller
 {
 
     public function index() {
         $results = $this->user->get();
-    return view('welcome',compact('results'));
+        return view('welcome',compact('results'));
     }
 
 	public function insert(Request $request){
 		$validator = Validator::make($request->all(), [
-            'fname' => 'required',
-            'lname' => 'required',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
         ]);
         if ($validator->fails()) {
-            return redirect('')
+            return redirect('/')
                         ->withErrors($validator)
                         ->withInput();
         }else{
-			// Retrieve the validated input...
-			$validated = $validator->validated();
-			$fname = $validated['fname'];
-			$lname = $validated['lname'];
-
-			$today = date("Y-m-d H:i:s");     // 2019-10-30 22:42:18(MySQL DATETIME format)
-
 			$user = $this->user;
-			$user->fname = $fname;
-			$user->lname = $lname;
+			$user->name = $request->input('name');
+			$user->email = $request->input('email');
 			$user->save();
-
-			Session::flash('message', trans("Data insert successfully."));
-			return redirect('');
-
+			return redirect('/')->with('message', 'Data inserted successfully!');
 		}
 	}
 
 	public function update(Request $request){
+
 	    $validator = Validator::make($request->all(), [
-            'id' => 'required',
-            'choose-name' => 'required',
-			'update-value'=> 'required',
+            'update_id' => 'required|exists:users,id',
+            'update_name' => 'required|string|max:255',
+			'update_email' => 'required|email|unique:users,email,'.$request->input('update_id'),
+        ],[
+            'update_id.required' => 'The id field is required.',
+            'update_name.required' => 'The name field is required.',
+            'update_name.string' => 'The name must be a string.',
+            'update_name.max' => 'The name may not be greater than 255 characters.',
+            'update_email.required' => 'The email field is required.',
+            'update_email.email' => 'The email must be a valid email address.',
+            'update_email.unique' => 'The email has already been taken.',
         ]);
         if ($validator->fails()) {
-            return redirect('')
+            return redirect('/')
                         ->withErrors($validator)
                         ->withInput();
         }else{
-			// Retrieve the validated input...
-			$validated = $validator->validated();
-			$id = $validated['id'];
-			$chooseName = $validated['choose-name'];
-			$updateValue = $validated['update-value'];
-
-			$today = date("Y-m-d H:i:s");     // 2019-10-30 22:42:18(MySQL DATETIME format)
-
-			if(!$this->user->find($id)){
-				Session::flash('error', trans("Data not found."));
-				return redirect()->back();
-			}else{
-				if($chooseName == 'fname'){
-					$user = $this->user->where('id',$id)->update(['fname'=>$updateValue]);
-					Session::flash('message', trans("Data updated successfully."));
-					return redirect('');
-
-				}else{
-					$user = $this->user->where('id',$id)->update(['lname'=>$updateValue]);
-					Session::flash('message', trans("Data updated successfully."));
-					return redirect('');
-				}
-			}
-
+            $update = $this->user->find($request->input('update_id'));
+            $update->name = $request->input('update_name');
+            $update->email = $request->input('update_email');
+            $update->save();
+            return redirect('/')->with('message', 'Data updated successfully!');
 		}
-
-
-
-
 	}
 
 	public function delete(Request $request){
 		$validator = Validator::make($request->all(), [
-            'delete-id' => 'required',
+            'delete-id' => 'required|exists:users,id'
         ]);
         if ($validator->fails()) {
-            return redirect('')
+            return redirect('/')
                         ->withErrors($validator)
                         ->withInput();
         }else{
-			$validated = $validator->validated();
-			$id = $validated['delete-id'];
-
-			if(!$this->user->find($id)){
-				Session::flash('error', trans("Data not found."));
-				return redirect()->back();
-			}else{
-				$this->user->find($id)->delete();
-				Session::flash('message', trans("Data delete successfully."));
-				return redirect('');
-			}
+            $delete = $this->user->find($request->input('delete-id'));
+            $delete->delete();
+            return redirect('/')->with('message', 'Data deleted successfully!');
 		}
 	}
 
