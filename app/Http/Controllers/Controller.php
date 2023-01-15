@@ -12,8 +12,9 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function __construct()
+    protected $user;
+    public function __construct(User $user)
     {
-        $this->user = new User;
+        $this->user = $user;
     }
 }
