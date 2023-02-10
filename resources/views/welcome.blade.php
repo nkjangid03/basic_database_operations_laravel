@@ -60,8 +60,6 @@
                 <div class="form-wrapper">
                     <h3>Insert</h3>
                     <form action="{{ route('insert') }}" method="post">
-                            @csrf
-
                             <label for="name">Name:</label>
                             <input type="text" id="name" name="name">
                             @error('name')
@@ -80,7 +78,6 @@
                 <div class="form-wrapper">
                     <h3>Update</h3>
 					 <form method="POST" action="{{ route('update') }}">
-                        @csrf
                         @method('PATCH')
                         <label for="id">ID:</label>
                         <input type="number" id="id" name="update_id">
@@ -106,7 +103,6 @@
                 <div class="form-wrapper">
                     <h3>Delete</h3>
                     <form method="POST" action="{{ route('delete') }}">
-                        @csrf
                         @method('DELETE')
                         <label for="id">ID:</label>
                         <input type="number" id="id" name="delete-id">

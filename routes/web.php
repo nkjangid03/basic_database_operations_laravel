@@ -15,8 +15,9 @@ use App\Http\Controllers\UserController;
 |
 */
 
+    Route::get('/',[UserController::Class,'index']);
+    Route::post('insert',[UserController::Class,'insert'])->name('insert');
+    Route::patch('update',[UserController::Class,'update'])->name('update');
+    Route::delete('delete',[UserController::Class,'delete'])->name('delete');
 
-Route::get('/',[UserController::Class,'index']);
-Route::post('insert',[UserController::Class,'insert'])->name('insert');
-Route::patch('update',[UserController::Class,'update'])->name('update');
-Route::delete('delete',[UserController::Class,'delete'])->name('delete');
+
